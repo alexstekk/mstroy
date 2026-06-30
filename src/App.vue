@@ -48,6 +48,7 @@ const mappedData = mapDataToAGGrid(treeStoreItems);
     <main>
         <TheTable :data="mappedData" />
         <footer>
+            Спасибо за интересное задание!
             <span>
                 Александр Стекольщиков
             </span>
