@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { AgGridVue } from "ag-grid-vue3"; // Vue Grid Logic
 
-import { treeStoreItems } from "@/tree-store/data";
-import { TreeStore } from "@/tree-store/tree-store";
 import type { Item } from "@/tree-store/types";
 import {
     AllEnterpriseModule,
@@ -15,22 +13,16 @@ import {
 import { ref } from "vue";
 ModuleRegistry.registerModules([AllEnterpriseModule, RowGroupingModule, TreeDataModule,]);
 
+export interface MappedItem extends Item {
+    children?: Item[] | null;
+}
 
-const mapDataToAGGrid = (items: Item[]) => {
-    const store = new TreeStore(items);
-    const buildNode = (item: Item) => {
-        const children = store.getChildren(item.id);
-        if (children.length) {
-            item.children = children.map(item => buildNode(item));
-        }
-        return item;
-    };
+export interface Props {
+    data: MappedItem[];
+}
 
-    const roots = items.filter(item => item.parent === null);
-    return roots.map(root => buildNode(root));
-};
+const { data } = defineProps<Props>();
 
-const mappedData = mapDataToAGGrid(treeStoreItems);
 const columnDefs = ref<ColDef[]>([
     {
         headerName: "№п/п",
@@ -54,7 +46,7 @@ const autoGroupColumnDef = ref<AutoGroupColumnDef>({
     }
 });
 
-const rowData = ref<Item[] | null>(mappedData);
+const rowData = ref<Item[] | null>(data);
 const treeDataChildrenField = ref("children");
 const groupDefaultExpanded = ref(-1);
 </script>
