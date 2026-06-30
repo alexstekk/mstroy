@@ -35,28 +35,30 @@ const mapDataToAGGrid = (items: Item[]) => {
 };
 
 const mappedData = mapDataToAGGrid(treeStoreItems);
-
-console.log("mappedData", mappedData);
-
 const columnDefs = ref<ColDef[]>([
-
+    {
+        headerName: "№п/п",
+        valueGetter: "node.rowIndex + 1",
+        pinned: 'left',
+        width: 100,
+    },
     { field: "label", headerName: "Наименование" },
 ]);
 
 const defaultColDef = ref<ColDef>({
-    flex: 1,
+    flex: 2,
+    resizable: false,
 });
 
 const autoGroupColumnDef = ref<AutoGroupColumnDef>({
     headerName: "Категория",
     valueGetter: (params) => (params.data.children?.length ? "Группа" : "Элемент"),
-    cellRendererParams: {
-        suppressCount: true,
-    },
-
+    cellClassRules: {
+        "text-bold": (params) => params.data.children?.length,
+    }
 });
 
-const rowData = ref<any[] | null>(mappedData);
+const rowData = ref<Item[] | null>(mappedData);
 const treeDataChildrenField = ref("children");
 const groupDefaultExpanded = ref(-1);
 const onGridReady = (params: GridReadyEvent) => {
@@ -70,3 +72,9 @@ const onGridReady = (params: GridReadyEvent) => {
         :defaultColDef="defaultColDef" :autoGroupColumnDef="autoGroupColumnDef" :rowData="rowData" :treeData="true"
         :treeDataChildrenField="treeDataChildrenField" :groupDefaultExpanded="groupDefaultExpanded"></ag-grid-vue>
 </template>
+
+<style>
+.text-bold {
+    font-weight: 700 !important;
+}
+</style>
