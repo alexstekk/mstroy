@@ -124,6 +124,41 @@ export class TreeStore {
 
     updateItem(item: Item) {
         // Принимает объект обновленного айтема и актуализирует этот айтем в хранилище.
+
+        const item = this._itemsById.get(updatedItem.id);
+
+        if (!item) {
+            throw new Error("Элемент с таким id не существует");
+        }
+
+        const itemIdx = this._items.findIndex((item) => item.id === updatedItem.id);
+        if (itemIdx) {
+            this._items[itemIdx] = updatedItem;
+        }
+        this._itemsById.set(updatedItem.id, updatedItem);
+
+        const oldParent = item?.parent;
+        const newParent = updatedItem.parent;
+
+        // Либо так
+        if (oldParent !== newParent) {
+            if (oldParent !== null) {
+                const oldChildrenIds = this._childrensById.get(oldParent);
+                if (oldChildrenIds) {
+                    oldChildrenIds.delete(updatedItem.id);
+                }
+                if (oldChildrenIds?.size === 0) {
+                    this._childrensById.delete(updatedItem.id);
+                }
+            }
+            if (newParent !== null) {
+                this._updateChildrenById(newParent, updatedItem);
+            }
+        }
+        // Либо пересоздавать целиком, но это не оптимально.
+
+        // console.log("this.childrensById", this._childrensById);
+        // console.log("this.itemsById", this._itemsById);
     }
 
     _buildDicts(items: Item[]) {
