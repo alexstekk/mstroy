@@ -5,7 +5,29 @@ import { TreeStore } from './tree-store/tree-store';
 import type { Item } from './tree-store/types.ts';
 
 const mapDataToAGGrid = (items: Item[]) => {
+
     const store = new TreeStore(items);
+
+    store.addItem({
+        id: '777',
+        parent: 4,
+        label: 'Айтем 777'
+    });
+
+    store.addItem({
+        id: '999',
+        parent: 8,
+        label: 'Айтем 999'
+    });
+
+    store.addItem({
+        id: '111',
+        parent: 4,
+        label: 'Айтем 999'
+    });
+
+    store.removeItem("111");
+
     const buildNode = (item: Item) => {
         const children = store.getChildren(item.id);
         if (children.length) {
@@ -19,7 +41,7 @@ const mapDataToAGGrid = (items: Item[]) => {
 };
 
 const mappedData = mapDataToAGGrid(treeStoreItems);
-console.log("mappedData", mappedData);
+
 
 </script>
 
