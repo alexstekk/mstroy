@@ -10,9 +10,6 @@ export class TreeStore {
         this._childrensById = new Map<ItemId, Set<ItemId>>();
 
         this._buildDicts(this._items);
-        // console.log("this._items", this._items);
-        // console.log("this._itemsById", this._itemsById);
-        // console.log("this._childrensById", this._childrensById);
     }
 
     getAll(): Item[] {
@@ -22,6 +19,7 @@ export class TreeStore {
 
     getItem(id: ItemId): Item | null {
         // Принимает id элемента и возвращает сам объект элемента.
+
         // null - чтобы отчетливо видеть, что элемента нет. Если будет undefined, то возможно где-то что-то пошло не так.
         const maybeItem = this._itemsById.get(id) ?? null;
         return maybeItem;
@@ -54,7 +52,7 @@ export class TreeStore {
             throw new Error("Неверные данные, ожидается id");
         }
 
-        // Необходимо обойти дерево элементов. Подойдет обход в глубину со стеком и массивом результата.
+        // Необходимо обойти дерево элементов. Подойдет обход в глубину.
         const result: Item[] = [];
         const stack: ItemId[] = [id];
 
@@ -107,19 +105,18 @@ export class TreeStore {
 
     addItem(item: Item) {
         // Принимает объект нового элемента и добавляет его в общую структуру хранилища.
+
         if (this._itemsById.get(item.id)) {
             throw new Error("Элемент с таким id уже существует");
         }
 
         this._items.push(item);
         this._updateDicts(this._items);
-
-        // console.log("this.itemsById", this._itemsById);
-        // console.log("this.childrensById", this._childrensById);
     }
 
     removeItem(id: ItemId) {
         // Принимает id элемента и удаляет соответствующий элемент и все его дочерние элементы из хранилища.
+
         if (!this._itemsById.get(id)) {
             throw new Error("Элемент с таким id не существует");
         }
@@ -143,15 +140,11 @@ export class TreeStore {
         this._items = this._items.filter((item) => !idsToRemove.has(item.id));
         this._updateDicts(this._items);
 
-        //....
+        // или так? Но это как-то императивно.
         // for (const id of idsToRemove) {
         //     this._itemsById.delete(id);
         //     this._childrensById.delete(id);
-        // или так? Но это как-то императивно.
         // }
-
-        // console.log("this.itemsById", this._itemsById);
-        // console.log("this.childrensById", this._childrensById);
     }
 
     updateItem(updatedItem: Item) {
@@ -187,10 +180,7 @@ export class TreeStore {
                 this._updateChildrenById(newParent, updatedItem);
             }
         }
-        // Либо пересоздавать целиком, но это не оптимально.
-
-        // console.log("this.childrensById", this._childrensById);
-        // console.log("this.itemsById", this._itemsById);
+        // Либо пересоздавать целиком, но это явно не оптимально.
     }
 
     _buildDicts(items: Item[]) {
