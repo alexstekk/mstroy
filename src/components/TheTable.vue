@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Item } from "@/tree-store/types";
 import {
+    AllEnterpriseModule,
     ModuleRegistry,
     themeQuartz,
     TreeDataModule,
@@ -9,7 +10,7 @@ import {
 } from "ag-grid-enterprise";
 import { AgGridVue } from "ag-grid-vue3";
 import { ref } from "vue";
-ModuleRegistry.registerModules([TreeDataModule]);
+ModuleRegistry.registerModules([AllEnterpriseModule, TreeDataModule,]);
 
 // Мб избыточно
 export interface MappedItem extends Item {
