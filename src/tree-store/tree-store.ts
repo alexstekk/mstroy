@@ -1,16 +1,27 @@
-import { treeStoreItems } from './data';
-import { Item, ItemId } from './types';
+import type { Item, ItemId } from './types.ts';
 
 export class TreeStore {
-  constructor(items: Item[]) {
-    this._items = items;
+  constructor(itemsArr: Item[]) {
+    // нет мутациям, создаем локальную копию.
+    this._items = [...itemsArr];
+    this._itemsById = new Map<ItemId, Item>(); // Словари (hash map) нужны для быстрого доступа O(1). Map - чтобы не было свистопляски с TS по поводу типов id.
+    this._childrensById = new Map<ItemId, Set<ItemId>>();
+    this._init(this._items);
+    console.log('this._items', this._items);
+    console.log('this._itemsById', this._itemsById);
+    console.log('this._childrensById', this._childrensById);
   }
 
-  getAll() {
+  getAll(): Item[] {
     // Должен возвращать изначальный массив элементов.
+    return [...this._items]; // Можно возвращать и this._items, но для безопасности лучше верну копию.
   }
-  getItem(id: ItemId) {
+
+  getItem(id: ItemId): Item | null {
     // Принимает id элемента и возвращает сам объект элемента.
+    // null - чтобы отчетливо видеть, что элемента нет. Если будет undefined, то возможно где-то что-то пошло не так.
+    const maybeItem = this._itemsById.get(id) ?? null;
+    return maybeItem;
   }
 
   getChildren(id: ItemId) {
@@ -46,7 +57,36 @@ export class TreeStore {
     // Принимает объект обновленного айтема и актуализирует этот айтем в хранилище.
   }
 
-  _items: Item[];
-}
+  _init(items: Item[]) {
+    if (!Array.isArray(items)) {
+      throw new Error('Неверные данные, ожидается массив');
+    }
+    // O(n), обойдем исходный массив один раз и создадим нужные словари.
 
-export const treeStore = new TreeStore(treeStoreItems);
+    // [
+    //   { id: 1, parent: null, label: 'Айтем 1' },
+    //   { id: '91064cee', parent: 1, label: 'Айтем 2' },
+    //   { id: 3, parent: 1, label: 'Айтем 3' },
+    //   { id: 4, parent: '91064cee', label: 'Айтем 4' },
+    //   { id: 5, parent: '91064cee', label: 'Айтем 5' },
+    //   { id: 6, parent: '91064cee', label: 'Айтем 6' },
+    //   { id: 7, parent: 4, label: 'Айтем 7' },
+    //   { id: 8, parent: 4, label: 'Айтем 8' },
+    // ]
+
+    for (const item of items) {
+      this._itemsById.set(item.id, item);
+      const parent = item.parent;
+      if (parent) {
+        if (!this._childrensById.has(parent)) {
+          this._childrensById.set(parent, new Set());
+        }
+        this._childrensById.get(parent)?.add(item.id);
+      }
+    }
+  }
+
+  _items: Item[];
+  _itemsById: Map<ItemId, Item>;
+  _childrensById: Map<ItemId, Set<ItemId>>;
+}

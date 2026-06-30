@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import HelloWorld from './components/HelloWorld.vue';
 import TheWelcome from './components/TheWelcome.vue';
+import { treeStoreItems } from './tree-store/data';
+import { TreeStore } from './tree-store/tree-store';
+
+const treeStore = new TreeStore(treeStoreItems);
+
 </script>
 
 <template>

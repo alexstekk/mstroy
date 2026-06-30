@@ -1,4 +1,4 @@
-import { Item } from './types';
+import type { Item } from './types';
 
 export const treeStoreItems: Item[] = [
   { id: 1, parent: null, label: 'Айтем 1' },
