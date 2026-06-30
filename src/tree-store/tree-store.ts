@@ -4,8 +4,11 @@ export class TreeStore {
     constructor(itemsArr: Item[]) {
         // нет мутациям, создаем локальную копию.
         this._items = [...itemsArr];
-        this._itemsById = new Map<ItemId, Item>(); // Словари (hash map) нужны для быстрого доступа O(1). Map - чтобы не было свистопляски с TS по поводу типов id.
+        // Словари (hash map) нужны для быстрого доступа O(1).
+        // Map - чтобы не было свистопляски с TS по поводу типов id,
+        this._itemsById = new Map<ItemId, Item>();
         this._childrensById = new Map<ItemId, Set<ItemId>>();
+
         this._init(this._items);
         console.log('this._items', this._items);
         console.log('this._itemsById', this._itemsById);
@@ -41,11 +44,39 @@ export class TreeStore {
         return result;
     }
 
-    getAllChildren(id: ItemId) {
+    getAllChildren(id: ItemId): Item[] {
         // Принимает id элемента и возвращает массив элементов,
         // являющихся прямыми дочерними элементами того, чей id получен в аргументе +
         // если у них в свою очередь есть еще дочерние элементы, они все тоже будут
         // включены в результат и так до самого глубокого уровня.
+
+        if (!id) {
+            throw new Error('Неверные данные, ожидается id');
+        }
+
+        // Необходимо обойти дерево элементов. Подойдет обход в глубину со стеком и массивом результата.
+        const result: Item[] = [];
+        const stack: ItemId[] = [id];
+
+        while (stack.length) {
+            const currentId = stack.pop();
+            if (currentId) {
+                const childrenIds = this._childrensById.get(currentId);
+
+                if (childrenIds) {
+                    for (const childrenId of childrenIds) {
+                        const child = this._itemsById.get(childrenId);
+
+                        if (child) {
+                            result.push(child);
+                            stack.push(childrenId);
+                        }
+                    }
+                }
+            }
+        }
+
+        return result;
     }
 
     getAllParents(id: ItemId) {
