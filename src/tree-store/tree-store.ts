@@ -1,4 +1,4 @@
-import type { Item, ItemId } from './types.ts';
+import type { Item, ItemId } from "./types.ts";
 
 export class TreeStore {
     constructor(itemsArr: Item[]) {
@@ -9,10 +9,10 @@ export class TreeStore {
         this._itemsById = new Map<ItemId, Item>();
         this._childrensById = new Map<ItemId, Set<ItemId>>();
 
-        this._init(this._items);
-        console.log('this._items', this._items);
-        console.log('this._itemsById', this._itemsById);
-        console.log('this._childrensById', this._childrensById);
+        this._buildDicts(this._items);
+        // console.log("this._items", this._items);
+        // console.log("this._itemsById", this._itemsById);
+        // console.log("this._childrensById", this._childrensById);
     }
 
     getAll(): Item[] {
@@ -51,7 +51,7 @@ export class TreeStore {
         // включены в результат и так до самого глубокого уровня.
 
         if (!id) {
-            throw new Error('Неверные данные, ожидается id');
+            throw new Error("Неверные данные, ожидается id");
         }
 
         // Необходимо обойти дерево элементов. Подойдет обход в глубину со стеком и массивом результата.
@@ -86,6 +86,10 @@ export class TreeStore {
         // наверх дерева через цепочку родителей к корню дерева. В результате
         // getAllParents ПОРЯДОК ЭЛЕМЕНТОВ ВАЖЕН!
 
+        if (!id) {
+            throw new Error("Неверные данные, ожидается id");
+        }
+
         const result: Item[] = [];
         let currentId: ItemId | null = id;
 
@@ -103,6 +107,15 @@ export class TreeStore {
 
     addItem(item: Item) {
         // Принимает объект нового элемента и добавляет его в общую структуру хранилища.
+        if (this._itemsById.get(item.id)) {
+            throw new Error("Элемент с таким id уже существует");
+        }
+
+        this._items.push(item);
+        this._updateDicts(this._items);
+
+        // console.log("this.itemsById", this._itemsById);
+        // console.log("this.childrensById", this._childrensById);
     }
 
     removeItem(id: ItemId) {
@@ -113,9 +126,9 @@ export class TreeStore {
         // Принимает объект обновленного айтема и актуализирует этот айтем в хранилище.
     }
 
-    _init(items: Item[]) {
+    _buildDicts(items: Item[]) {
         if (!Array.isArray(items)) {
-            throw new Error('Неверные данные, ожидается массив');
+            throw new Error("Неверные данные, ожидается массив");
         }
         // O(n), обойдем исходный массив один раз и создадим нужные словари.
 
@@ -132,14 +145,24 @@ export class TreeStore {
 
         for (const item of items) {
             this._itemsById.set(item.id, item);
-            const parent = item.parent;
-            if (parent) {
-                if (!this._childrensById.has(parent)) {
-                    this._childrensById.set(parent, new Set());
-                }
-                this._childrensById.get(parent)?.add(item.id);
+            const parentId = item.parent;
+            if (parentId) {
+                this._updateChildrenById(parentId, item);
             }
         }
+    }
+
+    _updateChildrenById(parentId: ItemId, item: Item) {
+        if (parentId !== null) {
+            if (!this._childrensById.has(parentId)) {
+                this._childrensById.set(parentId, new Set());
+            }
+            this._childrensById.get(parentId)?.add(item.id);
+        }
+    }
+
+    _updateDicts(items: Item[]) {
+        this._buildDicts(items);
     }
 
     _items: Item[];

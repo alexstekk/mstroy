@@ -8,7 +8,12 @@ const treeStore = new TreeStore(treeStoreItems);
 // console.log("treeStore.getChildren(1);", treeStore.getChildren(1));
 // console.log("treeStore.getAllChildren(1)", treeStore.getAllChildren(1));
 // console.log("treeStore.getAllChildren(4)", treeStore.getAllChildren(4));
-console.log("treeStore.getAllParents(7)", treeStore.getAllParents(7));
+// console.log("treeStore.getAllParents(7)", treeStore.getAllParents(7));
+treeStore.addItem({
+    id: '5',
+    parent: "91064cee",
+    label: 'NEW ITEM'
+});
 
 </script>
 
