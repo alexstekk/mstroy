@@ -1,8 +1,10 @@
-import { treeStoreItems } from './data'
-import { Item, ItemId } from './types'
+import { treeStoreItems } from './data';
+import { Item, ItemId } from './types';
 
 export class TreeStore {
-  constructor(items: Item[]) {}
+  constructor(items: Item[]) {
+    this._items = items;
+  }
 
   getAll() {
     // Должен возвращать изначальный массив элементов.
@@ -43,6 +45,8 @@ export class TreeStore {
   updateItem(item: Item) {
     // Принимает объект обновленного айтема и актуализирует этот айтем в хранилище.
   }
+
+  _items: Item[];
 }
 
-export const treeStore = new TreeStore(treeStoreItems)
+export const treeStore = new TreeStore(treeStoreItems);

@@ -1,4 +1,4 @@
-import { Item } from './types'
+import { Item } from './types';
 
 export const treeStoreItems: Item[] = [
   { id: 1, parent: null, label: 'Айтем 1' },
@@ -9,4 +9,4 @@ export const treeStoreItems: Item[] = [
   { id: 6, parent: '91064cee', label: 'Айтем 6' },
   { id: 7, parent: 4, label: 'Айтем 7' },
   { id: 8, parent: 4, label: 'Айтем 8' },
-]
+];
