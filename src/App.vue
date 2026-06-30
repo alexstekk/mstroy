@@ -5,9 +5,10 @@ import { treeStoreItems } from './tree-store/data';
 import { TreeStore } from './tree-store/tree-store';
 
 const treeStore = new TreeStore(treeStoreItems);
-console.log("treeStore.getChildren(1);", treeStore.getChildren(1));
-console.log("treeStore.getAllChildren(1)", treeStore.getAllChildren(1));
-console.log("treeStore.getAllChildren(4)", treeStore.getAllChildren(4));
+// console.log("treeStore.getChildren(1);", treeStore.getChildren(1));
+// console.log("treeStore.getAllChildren(1)", treeStore.getAllChildren(1));
+// console.log("treeStore.getAllChildren(4)", treeStore.getAllChildren(4));
+console.log("treeStore.getAllParents(7)", treeStore.getAllParents(7));
 
 </script>
 

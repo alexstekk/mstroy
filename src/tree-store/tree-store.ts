@@ -79,12 +79,26 @@ export class TreeStore {
         return result;
     }
 
-    getAllParents(id: ItemId) {
+    getAllParents(id: ItemId): Item[] {
         // Принимает id элемента и возвращает массив из цепочки
         // родительских элементов, начиная от самого элемента, чей id был передан в
         // аргументе и до корневого элемента, т.е. должен получиться путь элемента
         // наверх дерева через цепочку родителей к корню дерева. В результате
         // getAllParents ПОРЯДОК ЭЛЕМЕНТОВ ВАЖЕН!
+
+        const result: Item[] = [];
+        let currentId: ItemId | null = id;
+
+        while (currentId !== null) {
+            const currentItem = this._itemsById.get(currentId);
+
+            if (currentItem) {
+                result.push(currentItem);
+                currentId = currentItem?.parent;
+            }
+        }
+
+        return result;
     }
 
     addItem(item: Item) {
