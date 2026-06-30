@@ -9,11 +9,28 @@ const treeStore = new TreeStore(treeStoreItems);
 // console.log("treeStore.getAllChildren(1)", treeStore.getAllChildren(1));
 // console.log("treeStore.getAllChildren(4)", treeStore.getAllChildren(4));
 // console.log("treeStore.getAllParents(7)", treeStore.getAllParents(7));
-treeStore.addItem({
-    id: '5',
-    parent: "91064cee",
-    label: 'NEW ITEM'
+// treeStore.addItem({
+//     id: '5',
+//     parent: "91064cee",
+//     label: 'NEW ITEM'
+// });
+// treeStore.removeItem(7);
+treeStore.updateItem({
+    id: 4,
+    parent: 1,
+    label: 'FOO',
 });
+
+// [
+//   { id: 1, parent: null, label: 'Айтем 1' },
+//   { id: '91064cee', parent: 1, label: 'Айтем 2' },
+//   { id: 3, parent: 1, label: 'Айтем 3' },
+//   { id: 4, parent: '91064cee', label: 'Айтем 4' },
+//   { id: 5, parent: '91064cee', label: 'Айтем 5' },
+//   { id: 6, parent: '91064cee', label: 'Айтем 6' },
+//   { id: 7, parent: 4, label: 'Айтем 7' },
+//   { id: 8, parent: 4, label: 'Айтем 8' },
+// ]
 
 </script>
 
