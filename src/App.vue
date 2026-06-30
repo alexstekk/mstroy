@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { LucideSend, Phone } from '@lucide/vue';
 import TheTable from './components/TheTable.vue';
 import { treeStoreItems } from './tree-store/data';
 import { TreeStore } from './tree-store/tree-store';
@@ -41,14 +42,48 @@ const mapDataToAGGrid = (items: Item[]) => {
 };
 
 const mappedData = mapDataToAGGrid(treeStoreItems);
-
-
 </script>
 
 <template>
     <main>
         <TheTable :data="mappedData" />
+        <footer>
+            <span>
+                Александр Стекольщиков
+            </span>
+            <div class="contacts">
+                <a href="https://t.me/alexstekk">
+                    <LucideSend />
+                </a> |
+                <a href="tel:+79181531367">
+                    <Phone />
+                </a>
+            </div>
+        </footer>
     </main>
 </template>
 
-<style scoped></style>
+<style scoped>
+main {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    flex-grow: 1;
+}
+
+footer {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
+.contacts {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    color: white;
+}
+</style>

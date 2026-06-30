@@ -71,7 +71,7 @@ const groupDefaultExpanded = ref(-1);
 </script>
 
 <template>
-    <h2 class="text-center">MStroy | AG Grid | <a href="https://t.me/alexstekk">Александр Стекольщиков</a></h2>
+    <h1 class="text-center">MStroy | AG Grid</h1>
     <ag-grid-vue style="width: 100%; height: 50rem;" :columnDefs="columnDefs" :defaultColDef="defaultColDef"
         :autoGroupColumnDef="autoGroupColumnDef" :rowData="rowData" :treeData="true" :theme="myTheme"
         :treeDataChildrenField="treeDataChildrenField" :groupDefaultExpanded="groupDefaultExpanded"></ag-grid-vue>
