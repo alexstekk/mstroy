@@ -120,9 +120,41 @@ export class TreeStore {
 
     removeItem(id: ItemId) {
         // Принимает id элемента и удаляет соответствующий элемент и все его дочерние элементы из хранилища.
+        if (!this._itemsById.get(id)) {
+            throw new Error("Элемент с таким id не существует");
+        }
+
+        const idsToRemove = new Set<ItemId>();
+        const stack: ItemId[] = [id];
+
+        while (stack.length) {
+            const currentId = stack.pop();
+            if (currentId) {
+                idsToRemove.add(currentId);
+                const childrenIds = this._childrensById.get(currentId);
+                if (childrenIds) {
+                    for (const id of childrenIds) {
+                        stack.push(id);
+                    }
+                }
+            }
+        }
+
+        this._items = this._items.filter((item) => !idsToRemove.has(item.id));
+        this._updateDicts(this._items);
+
+        //....
+        // for (const id of idsToRemove) {
+        //     this._itemsById.delete(id);
+        //     this._childrensById.delete(id);
+        // или так? Но это как-то императивно.
+        // }
+
+        // console.log("this.itemsById", this._itemsById);
+        // console.log("this.childrensById", this._childrensById);
     }
 
-    updateItem(item: Item) {
+    updateItem(updatedItem: Item) {
         // Принимает объект обновленного айтема и актуализирует этот айтем в хранилище.
 
         const item = this._itemsById.get(updatedItem.id);
@@ -167,17 +199,6 @@ export class TreeStore {
         }
         // O(n), обойдем исходный массив один раз и создадим нужные словари.
 
-        // [
-        //   { id: 1, parent: null, label: 'Айтем 1' },
-        //   { id: '91064cee', parent: 1, label: 'Айтем 2' },
-        //   { id: 3, parent: 1, label: 'Айтем 3' },
-        //   { id: 4, parent: '91064cee', label: 'Айтем 4' },
-        //   { id: 5, parent: '91064cee', label: 'Айтем 5' },
-        //   { id: 6, parent: '91064cee', label: 'Айтем 6' },
-        //   { id: 7, parent: 4, label: 'Айтем 7' },
-        //   { id: 8, parent: 4, label: 'Айтем 8' },
-        // ]
-
         for (const item of items) {
             this._itemsById.set(item.id, item);
             const parentId = item.parent;
@@ -197,6 +218,8 @@ export class TreeStore {
     }
 
     _updateDicts(items: Item[]) {
+        this._itemsById.clear();
+        this._childrensById.clear();
         this._buildDicts(items);
     }
 
