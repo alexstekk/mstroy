@@ -6,18 +6,14 @@ import { TreeStore } from "@/tree-store/tree-store";
 import type { Item } from "@/tree-store/types";
 import {
     AllEnterpriseModule,
-    LicenseManager,
     ModuleRegistry,
     RowGroupingModule,
     TreeDataModule,
     type AutoGroupColumnDef,
-    type ColDef,
-    type GridReadyEvent
+    type ColDef
 } from "ag-grid-enterprise";
 import { ref } from "vue";
 ModuleRegistry.registerModules([AllEnterpriseModule, RowGroupingModule, TreeDataModule,]);
-LicenseManager.setLicenseKey("<your license key>");
-
 
 
 const mapDataToAGGrid = (items: Item[]) => {
@@ -61,20 +57,25 @@ const autoGroupColumnDef = ref<AutoGroupColumnDef>({
 const rowData = ref<Item[] | null>(mappedData);
 const treeDataChildrenField = ref("children");
 const groupDefaultExpanded = ref(-1);
-const onGridReady = (params: GridReadyEvent) => {
-    gridApi.value = params.api;
-};
-
 </script>
 
 <template>
-    <ag-grid-vue style="width: 100%; height: 50rem;" @grid-ready="onGridReady" :columnDefs="columnDefs"
-        :defaultColDef="defaultColDef" :autoGroupColumnDef="autoGroupColumnDef" :rowData="rowData" :treeData="true"
+    <h2 class="text-center">MStroy | AG Grid | <a href="https://t.me/alexstekk">Александр Стекольщиков</a></h2>
+    <ag-grid-vue style="width: 100%; height: 50rem;" :columnDefs="columnDefs" :defaultColDef="defaultColDef"
+        :autoGroupColumnDef="autoGroupColumnDef" :rowData="rowData" :treeData="true"
         :treeDataChildrenField="treeDataChildrenField" :groupDefaultExpanded="groupDefaultExpanded"></ag-grid-vue>
 </template>
 
 <style>
 .text-bold {
     font-weight: 700 !important;
+}
+
+.text-center {
+    text-align: center;
+}
+
+a {
+    color: currentColor;
 }
 </style>
